@@ -6,60 +6,92 @@ use Aliyun\OSS\Models\OSSOptions;
 
 class Aliyun
 {
-    public function createClient($accessKeyId, $accessKeySecret)
+    protected $client = null;
+    
+    public function __construct($accessKeyId, $accessKeySecret, $endPoint)
     {
-        return OSSClient::factory(array(
+        $this->client = OSSClient::factory(array(
             OSSOptions::ACCESS_KEY_ID => $accessKeyId,
             OSSOptions::ACCESS_KEY_SECRET => $accessKeySecret,
-            OSSOptions::ENDPOINT => 'http://oss-cn-qingdao.aliyuncs.com',
+            OSSOptions::ENDPOINT => $endPoint,
+
         ));
     }
 
-    public function listObjects(OSSClient $client, $bucket)
+    public function listObjects($bucket)
     {
-        $result = $client->listObjects(array(
+        if(!$this->client) {
+            throw new \Exception("Aliyun client must be an instance of Aliyun\OSS\OSSClient");
+        }
+        
+        $result = $this->client->listObjects(array(
             'Bucket' => $bucket,
         ));
+
+        return $result->getObjectSummarys();
+        
         foreach ($result->getObjectSummarys() as $summary) {
             echo 'Object key: ' . $summary->getKey() . "\n";
         }
     }
 
-    public function putStringObject(OSSClient $client, $bucket, $key, $content)
+    public function putStringObject($bucket, $key, $content)
     {
-        $result = $client->putObject(array(
+        if(!$this->client) {
+            throw new \Exception("Aliyun client must be an instance of Aliyun\OSS\OSSClient");
+        }
+        
+        $result = $this->client->putObject(array(
             'Bucket' => $bucket,
             'Key' => $key,
             'Content' => $content,
         ));
+        return $result;
+        
         echo 'Put object etag: ' . $result->getETag();
     }
 
-    public function putResourceObject(OSSClient $client, $bucket, $key, $content, $size)
+    public function putResourceObject($bucket, $key, $content, $size)
     {
-        $result = $client->putObject(array(
-            'Bucket' => $bucket,
-            'Key' => $key,
-            'Content' => $content,
+        if(!$this->client) {
+            throw new \Exception("Aliyun client must be an instance of Aliyun\OSS\OSSClient");
+        }
+        
+        $result = $this->client->putObject(array(
+            'Bucket'        => $bucket,
+            'Key'           => $key,
+            'Content'       => $content,
             'ContentLength' => $size,
         ));
+
+        return $result;
+        
         echo 'Put object etag: ' . $result->getETag();
     }
 
-    public function getObject(OSSClient $client, $bucket, $key)
+    public function getObject($bucket, $key)
     {
-        $object = $client->getObject(array(
+        if(!$this->client) {
+            throw new \Exception("Aliyun client must be an instance of Aliyun\OSS\OSSClient");
+        }
+   
+        $object = $this->client->getObject(array(
             'Bucket' => $bucket,
             'Key' => $key,
         ));
-
+        return $object;
+        
         echo "Object: " . $object->getKey() . "\n";
         echo (string) $object;
     }
 
-    public function deleteObject(OSSClient $client, $bucket, $key)
+    public function deleteObject($bucket, $key)
     {
-        $client->deleteObject(array(
+        if(!$this->client) {
+            throw new \Exception("Aliyun client must be an instance of Aliyun\OSS\OSSClient");
+        }
+        
+        return $this->client->deleteObject(array(
             'Bucket' => $bucket,
             'Key' => $key,
         ));
