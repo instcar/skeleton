@@ -443,7 +443,6 @@ class XMPPHP_XMPP extends XMPPHP_XMLStream {
         $xml .= "<name>$name</name>";
         $xml .= "</query>";
         $xml .= "</iq>";
-        echo $xml;
         $this->send($xml);
     } 
 
