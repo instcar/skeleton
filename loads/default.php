@@ -51,6 +51,11 @@ $loader->registerNamespaces(
         "Wrench"           => $system."/vendors/Wrench/lib/Wrench/",
     ))->register();
 
+$loader->registerPrefixes(
+    array(
+        "XMPPHP_" => $system."/vendors/XMPPHP/"
+    ))->register();
+
 // class autoloader
 $di->setShared('loader', function () use ($loader) {
     return $loader;
