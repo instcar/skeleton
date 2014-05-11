@@ -82,6 +82,20 @@ $di->set('router', function() {
                        "params"     => 4
                  ));
     
+    $router->add('/admin/',
+                 array(
+                     "module" => "admin",
+                     "controller" => "index",
+                     "action"   => "index",
+                 ));
+
+    $router->add('/admin',
+                 array(
+                     "module" => "admin",
+                     "controller" => "index",
+                     "action"   => "index",
+                 ));    
+    
     return $router;
 });
 
