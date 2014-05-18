@@ -446,6 +446,46 @@ class XMPPHP_XMPP extends XMPPHP_XMLStream {
         $this->send($xml);
     } 
 
+    public function createRoomEx($room_name, $server)
+    {
+        $id = 'req_' . $this->getID();
+        $xml0 = "<presence id='$id' to='{$room_name}@conference.{$server}/{$this->user}'><x xmlns='http://jabber.org/protocol/muc'></x></presence>";
+        $this->send($xml0);
+        
+        $id = 'req_' . $this->getID();
+        $xml1 = "<iq id='$id' to='{$room_name}@conference.{$server}' type='get'><query xmlns='http://jabber.org/protocol/muc#owner'></query></iq>";
+        $this->send($xml1);
+
+        $id= 'req_' . $this->getID();
+        $xml = "<iq id='$id' to='{$room_name}@conference.{$server}' type='set'>";
+        $xml .= "<query xmlns='http://jabber.org/protocol/muc#owner'>";
+        $xml .= "<x xmlns='jabber:x:data' type='submit'>";
+        $xml .= "<field var='FORM_TYPE' type='hidden'>";
+        $xml .= "<value>http://jabber.org/protocol/muc#roomconfig</value>";
+        $xml .= "</field>";
+        $xml .= "<field var='muc#roomconfig_persistentroom' type='boolean'>";
+        $xml .= "<value>1</value>";
+        $xml .= "</field>";
+        $xml .= "</x>";
+        $xml .= "</query>";
+        $xml .= "</iq>";
+        $this->send($xml);
+    }
+
+    public function messageRoom($room_id, $server, $body, $subject=null)
+    {
+        $list = explode("_", $room_id);
+        $room_owner_id = $list[0];
+
+        $id = 'req_' . $this->getID();
+        $xml0 = "<presence id='{$id}' from=\"{$this->user}@{$server}\" to=\"{$room_id}/{$room_owner_id}\"><x xmlns='http://jabber.org/protocol/muc'></x></presence>";
+        $this->send($xml0);
+
+        $id = 'req_' . $this->getID();
+        $xml1 = "<message id='{$id}' from=\"{$this->user}@{$server}\" to=\"{$room_id}\" type='groupchat'><subject>{$subject}</subject><body>$body</body></message>"; 
+        $this->send($xml1);
+    }
+
     public function createRoom($server)
     {
         $id = 'req_' . $this->getID();
