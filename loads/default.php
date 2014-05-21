@@ -44,6 +44,7 @@ $loader->registerDirs(
 
 $loader->registerNamespaces(
     array(
+        "BullSoft\Geo"         => $system."/apps/library/BullSoft/Geo/",
         "BullSoft\Models"  => $system.$config->application->modelsDir,
         "BullSoft\Library" => $system.$config->application->libraryDir,
         "Imagine"          => $system."/vendors/Imagine/lib/Imagine/",
