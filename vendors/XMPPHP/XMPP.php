@@ -478,7 +478,7 @@ class XMPPHP_XMPP extends XMPPHP_XMLStream {
         $room_owner_id = $list[0];
 
         $id = 'req_' . $this->getID();
-        $xml0 = "<presence id='{$id}' from=\"{$this->user}@{$server}\" to=\"{$room_id}/{$room_owner_id}\"><x xmlns='http://jabber.org/protocol/muc'></x></presence>";
+        $xml0 = "<presence id='{$id}' from=\"{$this->user}@{$server}\" to=\"{$room_id}/{$this->user}\"><x xmlns='http://jabber.org/protocol/muc'></x></presence>";
         $this->send($xml0);
 
         $id = 'req_' . $this->getID();
@@ -512,14 +512,14 @@ class XMPPHP_XMPP extends XMPPHP_XMLStream {
         $this->send($xml);
     }
 
-    public function destroyRoom($server)
+    public function destroyRoom($room_name, $server)
     {
         $id = 'req_' . $this->getID();
-        $xml0 = "<presence id='$id' to='{$this->user}@conference.{$server}/{$this->user}'><x xmlns='http://jabber.org/protocol/muc'></x></presence>";
+        $xml0 = "<presence id='$id' to='{$room_name}/{$this->user}'><x xmlns='http://jabber.org/protocol/muc'></x></presence>";
         $this->send($xml0);
 
         $id = 'req_' . $this->getID();
-        $xml1 = "<iq id='$id' to='{$this->user}@conference.{$server}' type='set'><query xmlns='http://jabber.org/protocol/muc#owner'><destroy><reason>close</reason></destroy></query></iq>";
+        $xml1 = "<iq id='$id' to='{$room_name}' type='set'><query xmlns='http://jabber.org/protocol/muc#owner'><destroy><reason>close</reason></destroy></query></iq>";
         $this->send($xml1);
     }
 }
