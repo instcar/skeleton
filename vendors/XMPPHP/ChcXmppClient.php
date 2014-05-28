@@ -7,7 +7,7 @@
 
 require_once dirname(__FILE__) . "/XMPP.php";
 
-class ChcXmppClient
+class XMPPHP_ChcXmppClient
 {
     protected $host;
     protected $port;
@@ -26,7 +26,7 @@ class ChcXmppClient
             $this->pwd = $pwd;
             $this->domain = $domain;
 
-            $conn = new XMPPHP_XMPP($host, $port, $user, $pwd, 'xmpphp', $domain, true, $loglevel=XMPPHP_Log::LEVEL_VERBOSE);
+            $conn = new XMPPHP_XMPP($host, $port, $user, $pwd, 'xmpphp', $domain, false, $loglevel=XMPPHP_Log::LEVEL_VERBOSE);
             $conn->connect();
             $conn->processUntil('session_start');
             $conn->presence();
